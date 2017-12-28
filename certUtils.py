@@ -94,18 +94,24 @@ defaultHeader = {
 # KeyError or the custom EJBCARESTException
 
 class EJBCARESTException(Exception):
-    pass
+    def __init__(self, errorCode, message):
+        self.message = message
+        self.errorCode = errorCode
 
 
 def retrieveCAChain(EJBCA_API_URL, caName):
     response = requests.get(EJBCA_API_URL + '/ca/' + caName,
                             headers=defaultHeader)
+    if response.status_code != 200:
+        raise EJBCARESTException(response.status_code, str(response.content))
     return response.json()['certificate']
 
 
 def retrieveCACRL(EJBCA_API_URL, CAName):
     response = requests.get(EJBCA_API_URL + '/ca/' + CAName + "/crl",
                             headers=defaultHeader)
+    if response.status_code != 200:
+        raise EJBCARESTException(response.status_code, str(response.content))
     return response.json()['CRL']
 
 
@@ -129,4 +135,4 @@ def signCert(EJBCA_API_URL, csrFile, CName, passwd):
     if response.status_code == 200:
         return response.json()['status']['data']
     else:
-        raise EJBCARESTException(str(response.content))
+        raise EJBCARESTException(response.status_code, str(response.content))

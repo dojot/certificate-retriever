@@ -13,22 +13,20 @@ from parseArgs import parseArgs
 import conf
 
 
-# a generic RequestError Exception
-class RequestError(Exception):
-    def __init__(self, errorCode, message):
-        self.message = message
-        self.errorCode = errorCode
-
-
 def dojotLogin(dojot, username, httpsVerify):
     if not username:
         username = input('enter your dojot username: ')
     passwd = getpass.getpass('enter password for ' + username + ': ')
-    r = requests.post(dojot + conf.authpath, verify=httpsVerify,
-                      json={
+    try:
+        r = requests.post(dojot + conf.authpath, verify=httpsVerify,
+                          json={
                              "username": username,
                              "passwd": passwd
-                           })
+                          })
+    except requests.exceptions.ConnectionError:
+        print("Could not connect to Auth service at " + dojot + conf.authpath)
+        exit(-1)
+
     if r.status_code != 200:
         print('Authentication faied')
         if err.errorCode in [403, 401]:
@@ -60,7 +58,7 @@ def generateCSR(devname, overwrite, dns, ip):
         print("CSR file already exists at " + filename + ". Skiping.")
 
 
-def askCertSign(ejbcaHost, devname):
+def askCertSign(ejbcaHost, devname, overwrite):
     filename = conf.certsDir + "/" + devname + ".crt"
     if not os.path.isfile(filename) or overwrite:
         try:
@@ -69,7 +67,9 @@ def askCertSign(ejbcaHost, devname):
                                       devname, 'dojot')
         except certUtils.EJBCARESTException as err:
             print("Cant sign the CRT. EJBCA-REST return code: "
-                  + str(err))
+                  + str(err.errorCode))
+            print(str(err.message))
+            helperErrorDesc(err.errorCode)
             exit(-1)
         certUtils.saveCRT(filename, cert)
         print(devname + " certificate signed. Avaliable at " + filename)
@@ -87,6 +87,13 @@ def retrieveCAChain(ejbcaHost, caName, overwrite):
         except KeyError:
             print("Invalid answer returned from EJBCA.")
             exit(-1)
+        except certUtils.EJBCARESTException as err:
+            print("Can't retrieve CA chain certificate."
+                  " EJBCA-REST return code: "
+                  + str(err.errorCode))
+            print(str(err.message))
+            helperErrorDesc(err.errorCode)
+            exit(-1)
     else:
         print("CA Certificate file already exists at "
               + filename + ". Skiping.")
@@ -98,12 +105,25 @@ def retrieveCRL(ejbcaHost, caName):
     except KeyError:
         print("Invalid answer returned from EJBCA.")
         exit(-1)
-
+    except certUtils.EJBCARESTException as err:
+        print("Can't retrieve CA CRL."
+              " EJBCA-REST return code: "
+              + str(err.errorCode))
+        print(str(err.message))
+        helperErrorDesc(err.errorCode)
+        exit(-1)
     try:
         certUtils.saveCRL(conf.certsDir + "/" + caName + ".crl", rawCRL)
     except crypto.Error:
         print("Could not decode retrieved CRL")
         exit(-1)
+
+
+def helperErrorDesc(code):
+    if code == 401 or code == 403:
+        print("Your user is not allowed to do this")
+    elif code == 500:
+        print("internal server error")
 
 
 if __name__ == '__main__':
@@ -115,7 +135,7 @@ if __name__ == '__main__':
     certUtils.defaultHeader['Authorization'] = 'Bearer ' + userAuth
 
     retrieveCAChain(userConf.dojot, userConf.caName, userConf.overwrite)
-    retrieveCRL(userConf.dojot, userConf.caName)
+    # retrieveCRL(userConf.dojot, userConf.caName)
 
     generateKeys(userConf.deviceName,
                  userConf.keyLength,
@@ -124,7 +144,7 @@ if __name__ == '__main__':
     generateCSR(userConf.deviceName,
                 userConf.overwrite,
                 userConf.dns, userConf.ip)
-    askCertSign(userConf.dojot, userConf.deviceName)
+    askCertSign(userConf.dojot, userConf.deviceName, userConf.overwrite)
 
     # deslog
     exit(0)
