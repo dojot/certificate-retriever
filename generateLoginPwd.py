@@ -135,8 +135,10 @@ def helperErrorDesc(code):
 
 if __name__ == '__main__':
     userConf = parseArgs()
+  
     userAuth = dojotLogin(userConf.dojot, userConf.username,
                           userConf.skipHttpsVerification)
+
     print('Authenticated')
 
     if not os.path.exists(conf.certsDir):
