@@ -15,7 +15,7 @@ def parseArgs():
                         help='Name of the device the key '
                         'and certificate should be created')
 
-    parser.add_argument('caName', metavar='ca', type=str,
+    parser.add_argument('caName', metavar='ca', type=str, default='IOTmidCA',
                         help='Name of the CA to sign the certificate')
 
     parser.add_argument('-u', '--username',
