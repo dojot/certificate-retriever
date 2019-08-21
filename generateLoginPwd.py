@@ -7,7 +7,7 @@ from OpenSSL import crypto
 from time import sleep
 import requests
 import getpass
-
+import jwt
 import certUtils
 from parseArgs import parseArgs
 import conf
@@ -20,8 +20,8 @@ def dojotLogin(dojot, username, httpsVerify):
     try:
         r = requests.post(dojot + conf.authpath, verify=httpsVerify,
                           json={
-                             "username": username,
-                             "passwd": passwd
+                              "username": username,
+                              "passwd": passwd
                           })
         r.raise_for_status()
     except requests.exceptions.ConnectionError:
@@ -52,10 +52,10 @@ def generateCSR(devname, overwrite, dns, ip):
     filename = conf.certsDir + "/" + devname + ".csr"
     if not os.path.isfile(filename) or overwrite:
         certUtils.generateCSR(
-                CName=devname,
-                privateKeyFile=conf.certsDir + "/" + devname + ".key",
-                csrFileName=filename,
-                dnsname=dns, ipaddr=ip)
+            CName=devname,
+            privateKeyFile=conf.certsDir + "/" + devname + ".key",
+            csrFileName=filename,
+            dnsname=dns, ipaddr=ip)
     else:
         print("CSR file already exists at " + filename + ". Skiping.")
 
@@ -135,9 +135,18 @@ def helperErrorDesc(code):
 
 if __name__ == '__main__':
     userConf = parseArgs()
+  
     userAuth = dojotLogin(userConf.dojot, userConf.username,
                           userConf.skipHttpsVerification)
+
     print('Authenticated')
+
+    if not os.path.exists(conf.certsDir):
+        os.makedirs(conf.certsDir)
+
+    # get tenant from auth user
+    tenant = (jwt.decode(userAuth, verify=False))['service']
+    userConf.deviceName = tenant+':'+userConf.deviceName
 
     certUtils.defaultHeader['Authorization'] = 'Bearer ' + userAuth
 
