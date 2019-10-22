@@ -60,12 +60,12 @@ def generateCSR(devname, overwrite, dns, ip):
         print("CSR file already exists at " + filename + ". Skiping.")
 
 
-def askCertSign(ejbcaHost, devname, overwrite):
-    filename = conf.certsDir + "/" + devname + ".crt"
+def askCertSign(ejbcaHost, devname, archivename, overwrite):
+    filename = conf.certsDir + "/" + archivename + ".crt"
     if not os.path.isfile(filename) or overwrite:
         try:
             cert = certUtils.signCert(ejbcaHost,
-                                      conf.certsDir + "/" + devname + ".csr",
+                                      conf.certsDir + "/" + archivename + ".csr",
                                       devname, 'dojot')
         except requests.exceptions.HTTPError as err:
             print("Cant sign the CRT. EJBCA-REST return code: "
@@ -146,21 +146,23 @@ if __name__ == '__main__':
 
     # get tenant from auth user
     tenant = (jwt.decode(userAuth, verify=False))['service']
-    userConf.deviceName = tenant+':'+userConf.deviceName
+
+    userConf.archiveName = tenant+'-'+userConf.deviceName
 
     certUtils.defaultHeader['Authorization'] = 'Bearer ' + userAuth
 
     retrieveCAChain(userConf.dojot, userConf.caName, userConf.overwrite)
     # retrieveCRL(userConf.dojot, userConf.caName)
 
-    generateKeys(userConf.deviceName,
+    generateKeys(userConf.archiveName,
                  userConf.keyLength,
                  userConf.overwrite)
 
-    generateCSR(userConf.deviceName,
+    generateCSR(userConf.archiveName,
                 userConf.overwrite,
                 userConf.dns, userConf.ip)
-    askCertSign(userConf.dojot, userConf.deviceName, userConf.overwrite)
+
+    askCertSign(userConf.dojot, userConf.deviceName,userConf.archiveName, userConf.overwrite)
 
     # deslog
     exit(0)
