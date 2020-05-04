@@ -24,7 +24,7 @@ mkdir certs
 python3 generateLoginPwd.py http://localhost:8000 admin:5c6512
 ```
 
-Certificates will be in `certs
+Certificates will be in `certs`
 
 #### Example of how to publish with `mosquitto_pub` with the certificates:
 
