@@ -11,6 +11,8 @@ A script to create a key pair and ask for certificate signature on dojot
 - The host `localhost`, is part of that URL mentioned above
 - The `8883` port is the MQTT secure port by default, but it could be another depending on the deployment, in dojot's official `docker-compose` is `8883`.
 
+#### Steps
+
 ```console
 sudo apt install python3-pip #if necessary
 
