@@ -21,7 +21,7 @@ pip3 install pyOpenSSL
 
 mkdir certs
 
-python3 generateLoginPwd.py http://localhost:8000 admin:5c6512
+python3 generateLoginPwd.py http://localhost:8000 admin:5c6512 #run always
 ```
 
 Certificates will be in `certs`
