@@ -32,5 +32,5 @@ Certificates will be in `certs`
 sudo apt-get install mosquitto-clients   #if necessary
 
 cd certs
-mosquitto_pub -h localhost -p 32665 -t /admin/5c6512/attrs  -m '{"test_payload":1000}' -i admin:5c6512 --cert admin:5c6512.crt --key admin:5c6512.key --cafile IOTmidCA.crt
+mosquitto_pub -h localhost -p 8883 -t /admin/5c6512/attrs  -m '{"test_payload":1000}' -i admin:5c6512 --cert admin:5c6512.crt --key admin:5c6512.key --cafile IOTmidCA.crt
 ```
