@@ -25,7 +25,7 @@ Certificates will be in `certs
 
 #### Example of how to publish with `mosquitto_pub` with the certificates:
 
-```
+```console
 sudo apt-get install mosquitto-clients   #if necessary
 
 cd certs
