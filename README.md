@@ -16,7 +16,7 @@ A script to create a key pair and ask for certificate signature on dojot
 ```console
 sudo apt install python3-pip #if necessary
 
-pip3 install crypt
+pip3 install crypto
 pip3 install pyOpenSSL
 
 mkdir certs
