@@ -18,6 +18,7 @@ sudo apt install python3-pip #if necessary
 
 pip3 install crypto
 pip3 install pyOpenSSL
+pip3 install requests
 
 mkdir certs
 
