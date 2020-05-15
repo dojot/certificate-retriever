@@ -135,7 +135,7 @@ def helperErrorDesc(code):
 
 if __name__ == '__main__':
     userConf = parseArgs()
-  
+
     userAuth = dojotLogin(userConf.dojot, userConf.username,
                           userConf.skipHttpsVerification)
 
@@ -162,7 +162,8 @@ if __name__ == '__main__':
                 userConf.overwrite,
                 userConf.dns, userConf.ip)
 
-    askCertSign(userConf.dojot, userConf.deviceName,userConf.archiveName, userConf.overwrite)
+    askCertSign(userConf.dojot, userConf.deviceName,
+                userConf.archiveName, userConf.overwrite)
 
     # deslog
     exit(0)

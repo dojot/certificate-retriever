@@ -1,41 +1,95 @@
-# certificate-retriever
+# Certificate Retriever
 A script to create a key pair and ask for certificate signature on dojot
+
+To use MQTT TLS in Dojot, you need to generate a certificate for each device, sign with EJBCA, making a request to Dojot, and finally when making a publication send the certificates.
 
 ## How to use
 
 #### Initial Notes
 
-- The value `5c6512` is the device ID, it must be replaced by the device ID already created in the dojot that will be generated certificates.
-- The value `admin` in  `admin:5c6512` and `-t /admin/5c6512/attrs` is `tenant`, should be replaced if necessary,
-- The URL `http://localhost:8000` is the address of the dojot, should be replaced if necessary.
-- The host `localhost`, is part of that URL mentioned above
-- The `8883` port is the MQTT secure port by default, but it could be another depending on the deployment, in dojot's official` docker-compose` is `8883`. In "unsafe" mode is port `1883`.
+- The value `<idDevice>` is the **device ID**.
+
+- The value `<userDojot` is **tenant**. If not specified, it will be requested by the script as well as the user's password.
+
+- The URL `<http://hostDojot:port>` is the **address** of the dojot. If the host or host is **https** just do not specify the **http**.
+
+- The `8883` port is the MQTT secure port by default, but it could be another depending on the deployment, in dojot's official `docker-compose` is `8883`. In "unsafe" mode is port `1883`. To check, just look for an `ALLOW_UNSECURED_MODE` variable in the `docker-compose` file. If it has **true** the port is `1883` and you will not need **TLS**, that is, certificates.
+
+#### Requirements and Dependencies
+
+- The script works on both Windows and Linux operating systems
+
+- Python 3+
+  - Installation :
+    - Linux: ```sudo apt install python3-pip```
+    - Windows : <https://www.python.org/downloads/>
+- Pyopenssl
+  - Installation :
+    - Linux: ```pip3 install pyopenssl```
+    - Windows : ```python3 -m pip install pyopenssl```
+- PyJWT
+  - Installation :
+    - Linux: ```pip3 install PyJWT```
+    - Windows : ```python3 -m pip install PyJWT```
+- Requests 
+  - Installation :
+    - Linux: ```pip3 install requests```
+    - Windows : ```python3 -m pip install requests```
+
 
 #### Steps
 
 ```console
-sudo apt install python3-pip #if necessary
+# Clone the project
+git clone https://github.com/ErnandesAJr/certificate-retriever.git
 
-python3 -m pip install pyopenssl
-python3 -m pip install PyJWT
-python3 -m pip install requests
+# Enter the "certificate-retriever" folder
+computer@name:~/ cd certificate-retriever
 
-# Create a folder called "certs" where all generated certificates will be saved
+# Create the certs folder
+computer@name:~/ mkdir certs
 
-mkdir certs
-# I need to specify if it is http, as the default is https
-# python3 generateLoginPwd.py <http://host.dojot:port> <idDevice> - u <username Dojot>
+# Run the script
+computer@name:~/ python3 generateLoginPwd.py <http://hostDojot:port> <idDevice> -u <userDojot>
 
-python3 generateLoginPwd.py http://localhost:8000 5c6512 #run always
 ```
 
-Certificates will be in `certs`
+#### Example of using the script:
 
-#### Example of how to publish with `mosquitto_pub` with the certificates:
+```console
+# Running the script
+
+computer@name:~/certificate-retriver$ python3 generateLoginPwd.py http://localhost:8000 339e11
+enter your dojot usrname : admin
+enter password for admin :
+Authenticated
+CA certificates retrieved
+admin:339e11.key pair created at ./certs//admin-339e11.key
+339e11 certificate signed. Avaliable at ./certs//admin-339e11.crt
+computer@name:~/certificate-retriver$
+# View the generated certificates
+
+# Enter certs folder
+computer@name:~/certificate-retriver$ cd certs
+# List what is inside the folder
+computer@name:~/certificate-retriver/certs$ ls # Or dir if windows
+IOTmidCA.crt  unimed-3103a0.crt  unimed-3103a0.csr  unimed-3103a0.key  unimed-unimed
+
+```
+
+#### Example of how to publish with `mosquitto_pub` with the certificates
 
 ```console
 sudo apt-get install mosquitto-clients   #if necessary
 
-cd certs
-mosquitto_pub -h localhost -p 8883 -t /admin/5c6512/attrs  -m '{"test_payload":1000}' -i admin:5c6512 --cert admin:5c6512.crt --key admin:5c6512.key --cafile IOTmidCA.crt
+# Enter certs folder
+computer@name:~/certificate-retriver$ cd certs
+
+# Publish to the same device that created the certificate
+computer@name:~/certificate-retriver/certs$ mosquitto_pub -h localhost -p 8883 -t /admin/339e11/attrs  -m '{"temperature":10.6.3}' -i admin:339e11 --cert admin-339e11.crt --key admin-339e11.key --cafile IOTmidCA.crt -d
+Client admin:339e11 sending CONNECT
+Client admin:339e11 received CONNACK (0)
+Client admin:339e11 sending PUBLISH (d0 ,q0, r0, m1, 'admin/339e11/attrs', ... (20 bytes))
+Client admin:339e11 sending DISCONNECT
+computer@name:~/certificate-retriver/certs$
 ```
