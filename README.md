@@ -67,22 +67,22 @@ CA certificates retrieved
 admin:339e11.key pair created at ./certs//admin-339e11.key
 339e11 certificate signed. Avaliable at ./certs//admin-339e11.crt
 computer@name:~/certificate-retriver$
-# View the generated certificates
 
+# View the generated certificates
 # Enter certs folder
 computer@name:~/certificate-retriver$ cd certs
 # List what is inside the folder
 computer@name:~/certificate-retriver/certs$ ls # Or dir if windows
-IOTmidCA.crt  unimed-3103a0.crt  unimed-3103a0.csr  unimed-3103a0.key  unimed-unimed
-
+IOTmidCA.crt  admin-339e11.crt  admin-339e11.csr  admin-339e11.key
+computer@name:~/certificate-retriver/certs$
 ```
 
 #### Example of how to publish with `mosquitto_pub` with the certificates
 
 ```console
-sudo apt-get install mosquitto-clients   #if necessary
+# sudo apt-get install mosquitto-clients #if necessary
 
-# Enter certs folder
+# Enter certs folder # if you are not inside
 computer@name:~/certificate-retriver$ cd certs
 
 # Publish to the same device that created the certificate
