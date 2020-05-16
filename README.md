@@ -1,21 +1,10 @@
 # Certificate Retriever
+
 A script to create a key pair and ask for certificate signature on dojot
 
 To use MQTT TLS in Dojot, you need to generate a certificate for each device, sign with EJBCA, making a request to Dojot, and finally when making a publication send the certificates.
 
-## How to use
-
-#### Initial Notes
-
-- The value `<idDevice>` is the **device ID**.
-
-- The value `<userDojot` is **tenant**. If not specified, it will be requested by the script as well as the user's password.
-
-- The URL `<http://hostDojot:port>` is the **address** of the dojot. If the host or host is **https** just do not specify the **http**.
-
-- The `8883` port is the MQTT secure port by default, but it could be another depending on the deployment, in dojot's official `docker-compose` is `8883`. In "unsafe" mode is port `1883`. To check, just look for an `ALLOW_UNSECURED_MODE` variable in the `docker-compose` file. If it has **true** the port is `1883` and you will not need **TLS**, that is, certificates.
-
-#### Requirements and Dependencies
+## Requirements and Dependencies
 
 - The script works on both Windows and Linux operating systems
 
@@ -36,8 +25,19 @@ To use MQTT TLS in Dojot, you need to generate a certificate for each device, si
     - Linux: ```pip3 install requests```
     - Windows : ```python3 -m pip install requests```
 
+## How to use
 
-#### Steps
+### Initial Notes
+
+- The value `<idDevice>` is the **device ID**.
+
+- The value `<userDojot` is **tenant**. If not specified, it will be requested by the script as well as the user's password.
+
+- The URL `<http://hostDojot:port>` is the **address** of the dojot. If the host or host is **https** just do not specify the **http**.
+
+- The `8883` port is the MQTT secure port by default, but it could be another depending on the deployment, in dojot's official `docker-compose` is `8883`. In "unsafe" mode is port `1883`. To check, just look for an `ALLOW_UNSECURED_MODE` variable in the `docker-compose` file. If it has **true** the port is `1883` and you will not need **TLS**, that is, certificates.
+
+### Steps
 
 ```console
 # Clone the project
@@ -54,7 +54,7 @@ computer@name:~/ python3 generateLoginPwd.py <http://hostDojot:port> <idDevice> 
 
 ```
 
-#### Example of using the script:
+### Example of using the script
 
 ```console
 # Running the script
@@ -77,7 +77,7 @@ IOTmidCA.crt  admin-339e11.crt  admin-339e11.csr  admin-339e11.key
 computer@name:~/certificate-retriver/certs$
 ```
 
-#### Example of how to publish with `mosquitto_pub` with the certificates
+### Example of how to publish with `mosquitto_pub` with the certificates
 
 ```console
 # sudo apt-get install mosquitto-clients #if necessary
