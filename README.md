@@ -20,7 +20,7 @@ To use MQTT TLS in Dojot, you need to generate a certificate for each device, si
   - Installation :
     - Linux: ```pip3 install PyJWT```
     - Windows : ```python3 -m pip install PyJWT```
-- Requests 
+- Requests
   - Installation :
     - Linux: ```pip3 install requests```
     - Windows : ```python3 -m pip install requests```
