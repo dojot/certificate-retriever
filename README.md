@@ -31,7 +31,7 @@ To use MQTT TLS in Dojot, you need to generate a certificate for each device, si
 
 - The value `<idDevice>` is the **device ID**.
 
-- The value `<userDojot` is **tenant**. If not specified, it will be requested by the script as well as the user's password.
+- The value `<userDojot>` is **tenant**. If not specified, it will be requested by the script as well as the user's password.
 
 - The URL `<http://hostDojot:port>` is the **address** of the dojot. If the host or host is **https** just do not specify the **http**.
 
