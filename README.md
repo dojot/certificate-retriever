@@ -10,20 +10,20 @@ To use MQTT TLS in Dojot, you need to generate a certificate for each device, si
 
 - Python 3+
   - Installation :
-    - Linux: ```sudo apt install python3-pip```
+    - Linux: `sudo apt install python3-pip`
     - Windows : <https://www.python.org/downloads/>
 - Pyopenssl
   - Installation :
-    - Linux: ```pip3 install pyopenssl```
-    - Windows : ```python3 -m pip install pyopenssl```
+    - Linux: `pip3 install pyopenssl`
+    - Windows : `python3 -m pip install pyopenssl`
 - PyJWT
   - Installation :
-    - Linux: ```pip3 install PyJWT```
-    - Windows : ```python3 -m pip install PyJWT```
+    - Linux: `pip3 install PyJWT`
+    - Windows : `python3 -m pip install PyJWT`
 - Requests
   - Installation :
-    - Linux: ```pip3 install requests```
-    - Windows : ```python3 -m pip install requests```
+    - Linux: `pip3 install requests`
+    - Windows : `python3 -m pip install requests`
 
 ## How to use
 
@@ -47,10 +47,10 @@ git clone https://github.com/ErnandesAJr/certificate-retriever.git
 computer@name:~/ cd certificate-retriever
 
 # Create the certs folder
-computer@name:~/ mkdir certs
+computer@name:~/certificate-retriver$ mkdir certs
 
 # Run the script
-computer@name:~/ python3 generateLoginPwd.py <http://hostDojot:port> <idDevice> -u <userDojot>
+computer@name:~/certificate-retriver$ python3 generateLoginPwd.py <http://hostDojot:port> <idDevice> -u <userDojot>
 
 ```
 
