@@ -1,0 +1,33 @@
+certificate-retriever
+This software is copyright (c) 2020 by CPQD <www.cpqd.com.br>.
+
+It is licensed under Apache License, Version 2.0.
+
+It has dependencies, which are available under the following licenses:
+
+* Apache License, Version 2.0
+     - cryptography (source code available at https://github.com/pyca/cryptography)
+     - pyOpenSSL (source code available at https://github.com/pyca/pyopenssl)
+     - requests (source code available at https://github.com/psf/requests)
+
+* MIT
+     - Naked (source code available at https://github.com/chrissimpkins/naked)
+     - PyYAML (source code available at https://github.com/yaml/pyyaml)
+     - cffi (source code available at https://foss.heptapod.net/pypy/cffi)
+     - crypto (source code available at https://github.com/chrissimpkins/crypto)
+     - shellescape (source code available at https://github.com/chrissimpkins/shellescape)
+     - six (source code available at https://github.com/benjaminp/six)
+     - urllib3 (source code available at https://github.com/urllib3/urllib3)
+
+* BSD (3-Clause)
+     - cryptography (source code available at https://github.com/pyca/cryptography)
+     - pycparser (source code available at https://github.com/eliben/pycparser)
+
+* BSD-Like
+     - idna (source code available at https://github.com/kjd/idna)
+
+* MPL 2.0
+     - certifi (source code available at https://github.com/certifi/python-certifi)
+
+* LGPL
+     - chardet (source code available at https://github.com/chardet/chardet)
